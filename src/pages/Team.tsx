@@ -2,6 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { team } from '../data/team';
 
+type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio?: string;
+  skills?: string[];
+  socials?: Record<string, string>;
+  image: string;
+  isLeader?: boolean;
+};
+
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -16,7 +27,7 @@ const item = {
     opacity: 1,
     y: 0,
     rotate: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -31,9 +42,12 @@ const marqueeWords = [
 
 export default function Team() {
   // Use isLeader flag instead of array order
-  const founder = team.find((m) => m.isLeader) ?? team[0];
-  const rest = team.filter((m) => m.id !== founder?.id);
-  const [selected, setSelected] = useState(null);
+  const founder: TeamMember | undefined =
+    (team as TeamMember[]).find((m) => m.isLeader) ?? (team as TeamMember[])[0];
+  const rest: TeamMember[] = (team as TeamMember[]).filter(
+    (m) => m.id !== founder?.id
+  );
+  const [selected, setSelected] = useState<TeamMember | null>(null);
 
   return (
     <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-32 overflow-hidden">
@@ -50,7 +64,7 @@ export default function Team() {
         <div className="md:col-span-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#A1A1AA] mb-6">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            The Team · {team.length} members
+            The Team · {(team as TeamMember[]).length} members
           </div>
 
           <h1 className="heading-display text-5xl md:text-7xl leading-[0.95] tracking-tight">
@@ -112,7 +126,7 @@ export default function Team() {
                 src={founder.image}
                 alt={founder.name}
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                onError={(e) => {
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
@@ -174,7 +188,7 @@ export default function Team() {
               src={member.image}
               alt={member.name}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              onError={(e) => {
+              onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
@@ -236,7 +250,7 @@ export default function Team() {
           </div>
           <div className="mt-6">
             <div className="text-4xl heading-display text-gradient-silver">
-              {team.length}
+              {(team as TeamMember[]).length}
             </div>
             <div className="text-sm text-[#A1A1AA] mt-1">
               minds, one mission
@@ -257,11 +271,16 @@ export default function Team() {
 
 /* ---------- Modal — tuned to your data shape ---------- */
 
-function MemberModal({ member, onClose }) {
-  const closeRef = useRef(null);
+type MemberModalProps = {
+  member: TeamMember;
+  onClose: () => void;
+};
+
+function MemberModal({ member, onClose }: MemberModalProps) {
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
@@ -307,7 +326,7 @@ function MemberModal({ member, onClose }) {
               src={member.image}
               alt={member.name}
               className="absolute inset-0 h-full w-full object-cover"
-              onError={(e) => {
+              onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
@@ -344,7 +363,7 @@ function MemberModal({ member, onClose }) {
             </p>
 
             {/* Skills */}
-            {member.skills?.length > 0 && (
+            {member.skills && member.skills.length > 0 && (
               <div className="mt-6">
                 <div className="text-xs uppercase tracking-widest text-white/40 mb-2">
                   Skills
@@ -372,9 +391,7 @@ function MemberModal({ member, onClose }) {
                   {Object.entries(member.socials).map(([key, href]) => (
                     <a
                       key={key}
-                      href={
-                        key === 'email' ? `mailto:${href}` : href
-                      }
+                      href={key === 'email' ? `mailto:${href}` : href}
                       target={key === 'email' ? undefined : '_blank'}
                       rel={key === 'email' ? undefined : 'noreferrer'}
                       className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 hover:bg-white/10 transition-colors capitalize"

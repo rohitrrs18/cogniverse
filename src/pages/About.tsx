@@ -1,11 +1,17 @@
 import { motion, useInView, animate } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { Target, Zap, Shield, Cpu, Code2, Trophy, ArrowUpRight } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { team } from '../data/team';
 
+type CounterProps = {
+  value: string;
+  suffix?: string;
+};
+
 /* Animated number that counts up when in view */
-function Counter({ value, suffix = '' }) {
-  const ref = useRef(null);
+function Counter({ value, suffix = '' }: CounterProps) {
+  const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const [display, setDisplay] = useState(0);
 
@@ -16,7 +22,7 @@ function Counter({ value, suffix = '' }) {
 
     const controls = animate(0, target, {
       duration: 1.2,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as const,
       onUpdate: (v) => setDisplay(Math.round(v)),
     });
     return () => controls.stop();
@@ -30,15 +36,34 @@ function Counter({ value, suffix = '' }) {
   );
 }
 
+type Stat = {
+  label: string;
+  value: string;
+  suffix: string;
+  icon: LucideIcon;
+};
+
+type Value = {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+};
+
+type TimelineItem = {
+  year: string;
+  title: string;
+  desc: string;
+};
+
 export default function About() {
-  const stats = [
+  const stats: Stat[] = [
     { label: 'Hackathons', value: '05', suffix: '+', icon: Trophy },
     { label: 'Projects Built', value: '10', suffix: '+', icon: Code2 },
     { label: 'Technologies', value: '15', suffix: '+', icon: Cpu },
     { label: 'Team Members', value: '03', suffix: '', icon: Shield },
   ];
 
-  const values = [
+  const values: Value[] = [
     {
       icon: Target,
       title: 'Problem First',
@@ -56,7 +81,7 @@ export default function About() {
     },
   ];
 
-  const timeline = [
+  const timeline: TimelineItem[] = [
     {
       year: '2023',
       title: 'A spark at a hackathon',

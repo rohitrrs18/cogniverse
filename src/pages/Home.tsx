@@ -3,6 +3,15 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Code, Users, Sparkles, Clock } from 'lucide-react';
 
+type HomeProps = {
+  ready?: boolean;
+};
+
+type HeadlineWord = {
+  text: string;
+  className: string;
+};
+
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -40,7 +49,7 @@ const rotatingPhrases = [
   'breaking boundaries',
 ];
 
-const headlineWords = [
+const headlineWords: HeadlineWord[] = [
   { text: 'We', className: 'text-white' },
   { text: 'Build', className: 'text-white' },
   { text: 'The', className: 'text-gradient-silver italic font-serif' },
@@ -49,21 +58,21 @@ const headlineWords = [
 
 const wordVariants = {
   hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
-  show: (i) => ({
+  show: (i: number) => ({
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
     transition: {
       delay: 0.15 + i * 0.1,
       duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
 };
 
 /* Live clock — Mumbai / IST */
 function LiveClock() {
-  const [time, setTime] = useState(() => new Date());
+  const [time, setTime] = useState<Date>(() => new Date());
   const [blink, setBlink] = useState(true);
 
   useEffect(() => {
@@ -75,7 +84,6 @@ function LiveClock() {
     };
   }, []);
 
-  // Format to Mumbai timezone (IST, UTC+5:30)
   const formatted = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Asia/Kolkata',
     hour: '2-digit',
@@ -101,7 +109,7 @@ function LiveClock() {
   );
 }
 
-export default function Home() {
+export default function Home({ ready = true }: HomeProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
 
   useEffect(() => {
@@ -158,8 +166,8 @@ export default function Home() {
         {/* Live clock — top right (desktop) */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          animate={{ opacity: ready ? 1 : 0 }}
+          transition={{ delay: ready ? 1 : 0 }}
           className="hidden md:block absolute top-6 right-0"
         >
           <LiveClock />
@@ -171,7 +179,7 @@ export default function Home() {
           <div className="md:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-3 py-1.5 mb-8 overflow-hidden"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
@@ -202,7 +210,7 @@ export default function Home() {
                   custom={i}
                   variants={wordVariants}
                   initial="hidden"
-                  animate="show"
+                  animate={ready ? 'show' : 'hidden'}
                   className={`inline-block ${word.className} mr-3 md:mr-4`}
                 >
                   {word.text}
@@ -213,8 +221,8 @@ export default function Home() {
             {/* Sub-line under headline */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
+              animate={{ opacity: ready ? 1 : 0 }}
+              transition={{ delay: ready ? 0.9 : 0 }}
               className="mt-6 flex items-center gap-3 text-xs text-[#8A8A8A]"
             >
               <span className="h-px w-10 bg-white/20" />
@@ -226,8 +234,8 @@ export default function Home() {
           <div className="md:col-span-5">
             <motion.p
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ delay: ready ? 0.6 : 0, duration: 0.6 }}
               className="text-base md:text-lg text-[#A1A1AA] leading-relaxed mb-8"
             >
               A collective of passionate computer engineering students building
@@ -236,8 +244,8 @@ export default function Home() {
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ delay: ready ? 0.7 : 0, duration: 0.6 }}
               className="flex flex-col sm:flex-row md:flex-col gap-3"
             >
               <Link
@@ -273,8 +281,8 @@ export default function Home() {
             {/* Tiny tag row */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
+              animate={{ opacity: ready ? 1 : 0 }}
+              transition={{ delay: ready ? 0.9 : 0 }}
               className="mt-6 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#8A8A8A]"
             >
               <Sparkles size={11} />
@@ -286,8 +294,8 @@ export default function Home() {
         {/* Mobile clock — above scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          animate={{ opacity: ready ? 1 : 0 }}
+          transition={{ delay: ready ? 1 : 0 }}
           className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2"
         >
           <LiveClock />
@@ -296,8 +304,8 @@ export default function Home() {
         {/* Scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          animate={{ opacity: ready ? 1 : 0 }}
+          transition={{ delay: ready ? 1.2 : 0 }}
           className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-[#8A8A8A]"
         >
           <span>Scroll</span>

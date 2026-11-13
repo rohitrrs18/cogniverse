@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export default function Loader({ onComplete, duration = 1600 }) {
+type LoaderProps = {
+  onComplete: () => void;
+  duration?: number;
+};
+
+export default function Loader({ onComplete, duration = 1600 }: LoaderProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
