@@ -14,7 +14,6 @@ export default function App() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
 
-  // Lock scroll while the loader is up
   useEffect(() => {
     document.body.style.overflow = loading ? 'hidden' : '';
     return () => {
@@ -24,8 +23,7 @@ export default function App() {
 
   return (
     <HelmetProvider>
-      <div className="min-h-screen bg-[#050505] text-white selection:bg-white selection:text-black flex flex-col">
-        {/* Loader covers EVERYTHING — nav, page, footer */}
+      <div className="min-h-screen bg-[#050505] text-white selection:bg-white selection:text-black flex flex-col overflow-x-hidden">
         <AnimatePresence>
           {loading && (
             <Loader key="loader" onComplete={() => setLoading(false)} />
@@ -34,7 +32,7 @@ export default function App() {
 
         <Navbar />
 
-        <main className="relative z-10 pt-24 flex-grow">
+        <main className="relative z-10 pt-20 sm:pt-24 flex-grow">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route

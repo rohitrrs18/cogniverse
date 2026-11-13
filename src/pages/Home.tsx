@@ -70,7 +70,6 @@ const wordVariants = {
   }),
 };
 
-/* Live clock — Mumbai / IST */
 function LiveClock() {
   const [time, setTime] = useState<Date>(() => new Date());
   const [blink, setBlink] = useState(true);
@@ -121,18 +120,15 @@ export default function Home({ ready = true }: HomeProps) {
 
   return (
     <div className="relative flex flex-col items-center overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] max-w-[600px] max-h-[600px] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* ===== HERO ===== */}
-      <section className="relative z-10 min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4 py-20">
-        {/* Faint grid backdrop */}
+      <section className="relative z-10 min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.045]"
           style={{
             backgroundImage:
               'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
+            backgroundSize: '48px 48px',
             maskImage:
               'radial-gradient(ellipse at center, black 25%, transparent 70%)',
             WebkitMaskImage:
@@ -140,8 +136,7 @@ export default function Home({ ready = true }: HomeProps) {
           }}
         />
 
-        {/* Floating orbit dots */}
-        <div className="pointer-events-none absolute inset-0">
+        <div className="pointer-events-none absolute inset-0 hidden sm:block">
           {[
             { top: '18%', left: '12%', delay: 0 },
             { top: '28%', left: '85%', delay: 1.2 },
@@ -163,31 +158,28 @@ export default function Home({ ready = true }: HomeProps) {
           ))}
         </div>
 
-        {/* Live clock — top right (desktop) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: ready ? 1 : 0 }}
           transition={{ delay: ready ? 1 : 0 }}
-          className="hidden md:block absolute top-6 right-0"
+          className="hidden lg:block absolute top-4 right-2"
         >
           <LiveClock />
         </motion.div>
 
-        {/* Content grid */}
-        <div className="relative grid md:grid-cols-12 gap-10 items-end w-full">
-          {/* Left: headline */}
-          <div className="md:col-span-7">
+        <div className="relative grid lg:grid-cols-12 gap-8 lg:gap-10 items-end w-full">
+          <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-3 py-1.5 mb-8 overflow-hidden"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-3 py-1.5 mb-6 sm:mb-8 max-w-full"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#C0C0C0] shrink-0">
                 Student Innovators
               </span>
-              <span className="h-3 w-px bg-white/20" />
-              <div className="relative h-3 overflow-hidden min-w-[130px]">
+              <span className="hidden sm:inline-block h-3 w-px bg-white/20" />
+              <div className="relative h-3 overflow-hidden hidden sm:block min-w-[110px]">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={phraseIndex}
@@ -203,7 +195,7 @@ export default function Home({ ready = true }: HomeProps) {
               </div>
             </motion.div>
 
-            <h1 className="heading-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight">
+            <h1 className="heading-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight">
               {headlineWords.map((word, i) => (
                 <motion.span
                   key={i}
@@ -211,27 +203,25 @@ export default function Home({ ready = true }: HomeProps) {
                   variants={wordVariants}
                   initial="hidden"
                   animate={ready ? 'show' : 'hidden'}
-                  className={`inline-block ${word.className} mr-3 md:mr-4`}
+                  className={`inline-block ${word.className} mr-2 sm:mr-3 md:mr-4`}
                 >
                   {word.text}
                 </motion.span>
               ))}
             </h1>
 
-            {/* Sub-line under headline */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: ready ? 1 : 0 }}
               transition={{ delay: ready ? 0.9 : 0 }}
               className="mt-6 flex items-center gap-3 text-xs text-[#8A8A8A]"
             >
-              <span className="h-px w-10 bg-white/20" />
+              <span className="h-px w-8 sm:w-10 bg-white/20" />
               <span className="uppercase tracking-[0.3em]">CogniVerse · 2024</span>
             </motion.div>
           </div>
 
-          {/* Right: description + CTAs */}
-          <div className="md:col-span-5">
+          <div className="lg:col-span-5">
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -246,7 +236,7 @@ export default function Home({ ready = true }: HomeProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ delay: ready ? 0.7 : 0, duration: 0.6 }}
-              className="flex flex-col sm:flex-row md:flex-col gap-3"
+              className="flex flex-col sm:flex-row lg:flex-col gap-3"
             >
               <Link
                 to="/projects"
@@ -278,7 +268,6 @@ export default function Home({ ready = true }: HomeProps) {
               </Link>
             </motion.div>
 
-            {/* Tiny tag row */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: ready ? 1 : 0 }}
@@ -291,17 +280,15 @@ export default function Home({ ready = true }: HomeProps) {
           </div>
         </div>
 
-        {/* Mobile clock — above scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: ready ? 1 : 0 }}
           transition={{ delay: ready ? 1 : 0 }}
-          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2"
+          className="lg:hidden absolute bottom-20 left-1/2 -translate-x-1/2"
         >
           <LiveClock />
         </motion.div>
 
-        {/* Scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: ready ? 1 : 0 }}
@@ -317,21 +304,20 @@ export default function Home({ ready = true }: HomeProps) {
         </motion.div>
       </section>
 
-      {/* ===== PROOF STRIP ===== */}
       <motion.section
         variants={container}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-60px' }}
-        className="relative z-10 w-full max-w-5xl mx-auto px-4 pb-16"
+        className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16"
       >
-        <div className="grid grid-cols-3 gap-4 border-y border-white/10 py-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 border-y border-white/10 py-6 sm:py-8">
           {proof.map((p, i) => (
             <motion.div key={i} variants={item} className="text-center">
-              <div className="heading-display text-3xl md:text-4xl text-white">
+              <div className="heading-display text-2xl sm:text-3xl md:text-4xl text-white">
                 {p.value}
               </div>
-              <div className="text-[10px] uppercase tracking-[0.3em] text-[#8A8A8A] mt-1">
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#8A8A8A] mt-1">
                 {p.label}
               </div>
             </motion.div>
@@ -339,10 +325,9 @@ export default function Home({ ready = true }: HomeProps) {
         </div>
       </motion.section>
 
-      {/* ===== TECH MARQUEE ===== */}
-      <section className="relative z-10 w-full border-y border-white/10 py-5 overflow-hidden mb-24">
+      <section className="relative z-10 w-full border-y border-white/10 py-4 sm:py-5 overflow-hidden mb-16 sm:mb-24">
         <motion.div
-          className="flex gap-8 whitespace-nowrap"
+          className="flex gap-6 sm:gap-8 whitespace-nowrap"
           animate={{ x: ['0%', '-50%'] }}
           transition={{ duration: 22, ease: 'linear', repeat: Infinity }}
         >
@@ -350,7 +335,7 @@ export default function Home({ ready = true }: HomeProps) {
             (word, i) => (
               <span
                 key={i}
-                className="flex items-center gap-8 text-sm uppercase tracking-[0.3em] text-[#A1A1AA]"
+                className="flex items-center gap-6 sm:gap-8 text-xs sm:text-sm uppercase tracking-[0.25em] sm:tracking-[0.3em] text-[#A1A1AA]"
               >
                 {word}
                 <span className="h-1 w-1 rounded-full bg-white/30" />
